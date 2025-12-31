@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>effect</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: orange;
+            color: navy;
+            min-height: 100vh;
+            font-family: system-ui, sans-serif;
+        }
+
+        /* ─── Fixed Navigation ─── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgb(225, 151, 14);
+            border-bottom: 2px solid rgba(0,0,0,0.15);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .nav img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+
+            /* IMPORTANT */
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .nav img:hover {
+            transform: scale(1.5);
+        }
+
+
+        .nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+        }
+
+        .nav ul li {
+            margin: 0 20px;
+            cursor: pointer;
+            border: 1px solid white;
+            width: 44px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.15);
+            transition: all 0.25s ease;
+        }
+
+        .nav ul li:hover {
+            background: navy;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* ─── Fixed Sidebar (left) ─── */
+        .sidebar {
+            position: fixed;
+            top: 80px;               /* below nav */
+            left: 0;
+            width: 20%;
+            height: calc(100vh - 80px);
+            background: rgb(237, 187, 94);
+            border-right: 2px solid white;
+            overflow-y: auto;
+            padding: 16px;
+            z-index: 900;
+        }
+
+        .sidebar p {
+            margin: 0 0 16px 0;
+            padding: 12px;
+            height: auto;
+            min-height: 120px;
+            width: 100%;
+            background: rgb(247, 228, 21);
+            border-radius: 6px;
+        }
+
+        /* ─── Scrollable Main Content ─── */
+        .main-wrapper {
+            margin-left: 20%;          /* same as sidebar width */
+            padding-top: 96px;         /* space for fixed nav */
+            min-height: 100vh;
+            background: linear-gradient(to bottom, rgb(239, 211, 157), rgb(247, 208, 135) 40%, rgb(239, 211, 157));
+        }
+
+        #main {
+            padding: 20px 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        #main p {
+            margin: 0 0 1.4em 0;
+            padding: 16px;
+            background: rgba(255,255,255,0.75);
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        /* New divs created by clicking F */
+        /* .f {
+            height: 100px;
+            width: 150px;
+            margin: 16px 0;
+            background: rgb(247, 208, 135);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            font-weight: bold;
+        } */
+
+        /* Checkout panel (already good, just minor contrast tweak) */
+        .checkout-panel {
+            position: fixed;
+            top: 96px;
+            right: 20px;
+            width: 340px;
+            max-height: calc(100vh - 120px);
+            background: white;
+            border: 2px solid navy;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            padding: 24px;
+            z-index: 1100;
+            overflow-y: auto;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .checkout-panel.hide {
+            opacity: 0;
+            transform: translateY(-12px) scale(0.97);
+            pointer-events: none;
+        }
+
+        .checkout-panel:not(.hide) {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        #e.active {
+            background: navy !important;
+            color: white !important;
+        }
+
+        .hde {
+            display: none;
+        }
+
+        .next {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgb(209, 187, 146);
+            color: white;
+            margin-top: 40px;
+        }
+
+        .next h1 {
+            margin: 0;
+            font-size: 2.1rem;
+        }
+        /* ─── Post Modal ─── */
+.post-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.post-modal.hide {
+  display: none;
+}
+
+.post-box {
+  background: white;
+  width: 360px;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+}
+
+.post-header {
+  display: flex;
+  gap: 12px;
+}
+
+.post-header img {
+  border-radius: 50%;
+}
+
+.post-header textarea {
+  width: 100%;
+  height: 90px;
+  resize: none;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ─── Created Posts ─── */
+.user-post {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  margin: 16px 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.user-post img {
+  border-radius: 50%;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        <img src="hadi.jpg" alt="hadi">
+        <ul>
+            <li>A</li>
+            <li>B</li>
+            <li>C</li>
+            <li>D</li>
+            <li id="e">CART</li>
+            <li id="postBtn">POST</li>
+
+        </ul>
+    </div>
+
+    <div class="sidebar">
+        <p id="content">২০২৩ সালের নভেম্বরের কোনো এক শীতের সন্ধ্যা। সেগুনবাগিচায়, বাংলাদেশের একজন বিদগ্ধ স্কলারের বাসায় হাদি ভাইয়ের সঙ্গে আমার পরিচয়।
+
+        আমি তখন ড্যাফোডিল ইন্টারন্যাশনাল ইউনিভার্সিটিতে ডেভেলপমেন্ট স্টাডিজ বিভাগে পড়াচ্ছি। আমার কলিগ ফয়সাল আকবর ভাই (আমি ভাইকে স্যার ডাকতেই স্বাচ্ছন্দ্যবোধ করি), বোরহান ভাই, আমার হলের বন্ধু মাহমুদ ভাই। ফয়সাল স্যার, বোরহান ভাই আর হাদি ভাই—তিনজনই ঢাকা বিশ্ববিদ্যালয়ের রাষ্ট্রবিজ্ঞান বিভাগের সাবেক শিক্ষার্থী। ওনাদের পরিচয় এবং বোরহান ভাই–হাদি ভাইয়ের ঘনিষ্ঠতা ও বন্ধুত্ব অনেক পুরোনো।
+
+        হাদি ভাই, বোরহান ভাই, মাহমুদ ভাই, আমি ও আরও কয়েকজন মিলে একটা পাঠচক্র শুরু করি ’২৩-এর নভেম্বরেই।
+        মিশন: বাংলাদেশের বস্তাপচা আওয়ামী বয়ানের যে ইতিহাস—তার ডিবাঙ্কের লক্ষ্যে বস্তুনিষ্ঠ ও পদ্ধতিগতভাবে ইতিহাসের নিবিড় পাঠ ও তার বস্তুনিষ্ঠ পর্যালোচনা।
+
+        পাঠচক্রের বাইরে হাদি ভাইয়ের সঙ্গে আমার আরেক ডাইমেনশনে যে মিল, তা হলো পোয়েট্রি। ভাই কবিতা লিখতেন, আমিও হালকা-পাতলা। ভাইয়ের কবিতার বিষয়বস্তু বহুমাত্রিক—প্রেম, বিরহ, প্রতিবাদ, প্রতিরোধ, বিপ্লব ইত্যাদি। আমার শুধুই প্রেম আর বিরহ। ভাইকে আমি লেখা পাঠাতাম সকাল, সন্ধ্যা, দুপুর, রাত। ক্রিটিক চাইতাম। ভাইও আমাকে লেখা পাঠাতেন। আমরা আলাপ করতাম।
+
+        একদিন রাত আড়াইটার দিকে ভাই কবিতা পাঠিয়ে বললেন—
+        “আজাদ, আমার ঘুম আসছে না। কয়েকটা কবিতা লিখে ফেললাম। দেখ তো, এই কবিতাটা বইতে রাখা যায় কিনা?”
+        সেই বই বের হলো ’২৪-এর বইমেলায়—সীমান্ত শরীফ ছদ্মনামে ‘লাভায় লালশাক পুবের আকাশ’।
+
+        হাদি ভাইয়ের দুই সন্তান। এক তার ঔরসজাত সন্তান, আরেক মানসজাত সন্তান (লাভায় লালশাক পুবের আকাশ)। ভাই প্রায়ই বলতেন—একজন কবি টিকে যাওয়ার জন্য ৬–৭টা কবিতাই ইনাফ। ভাই টিকে গেলেন শুধু কবি হিসেবে নয়, বরং বিপ্লবী হিসেবে। বাংলাদেশের স্বাধীনতা-সার্বভৌমত্ব রক্ষার প্রতীক হিসেবে, ইনসাফের প্রতীক হিসেবে, ফ্যাসিবাদ ও আধিপত্যবাদবিরোধী ঐক্যের প্রতীক হিসেবে। ভাই আমার লাল কবি, লাল বিপ্লবী; লালশাকের মতো অকৃত্রিম লাল।
+
+        এর মাঝে চলে এলো ’২৪-এর আওয়ামী ফ্যাসিবাদের বিরুদ্ধে ছাত্র-জনতার ঐতিহাসিক গণঅভ্যুত্থান। ভাইয়ের আন্দোলনের জোন রামপুরা–বনশ্রী। এই এলাকায় হাদি ভাইয়ের অ্যাক্টিভ পার্টিসিপেশন ছিল। স্বৈরাচার শেখ হাসিনার পতনের পর ভাইয়ের পুরোনো স্বপ্নের বাস্তবায়নের সুযোগ এলো। নেমে গেলেন রাষ্ট্র সংস্কার, কালচারাল ফ্যাসিজম ও আধিপত্যবাদবিরোধী লড়াইয়ে। প্রতিষ্ঠা করলেন ‘ইনকিলাব মঞ্চ’। গড়ে তুললেন ভাইয়ের মতো ডেডিকেশন ও ইন্টিগ্রেশনে ঋদ্ধ একটা টিম।
+
+        আমি যখনই হাদি ভাইকে কোথাও এনগেজ করার সুযোগ পেয়েছি, সেই সুযোগ হাতছাড়া করতে চাইনি। হাদি ভাই তখন ধীরে ধীরে জনপরিসরে পরিচিত মুখ হয়ে উঠছেন। সরকার পতনের পরপরই আমার বন্ধু শেখ মু. আরমান তার **‘ডায়ালগ ফর ডেমোক্রেসি’**র আয়োজনে “ফ্যাসিবাদী বয়ান নির্মাণে গণমাধ্যমের ভূমিকা: একটি পর্যালোচনা” শীর্ষক অনুষ্ঠান করে। হাদি ভাইকে আমরা নিয়ে আসলাম মুজাফফর আহমেদ চৌধুরী অডিটোরিয়ামে। হাদি ভাই ইন। মাহমুদ ভাই (মাহমুদুর রহমান), শফিক ভাইয়ের (শফিকুল আলম) পাশাপাশি হাদি ভাইয়ের জ্বালাময়ী ও ভাবনাজাগানিয়া আলাপ অডিয়েন্সকে প্রাণিত করেছে।</p>
+        <button id="change">HIDE</button>
+        <button id="minus">-</button>
+        <input type="number" id="inValue" readonly style="width:60px; margin:8px 0;">
+        <button id="plus">+</button>
+        <details>
+        <summary>Section 1</summary>
+        <p>This is the content.</p>
+        </details>
+        <details open>
+        <summary>Expanded by default</summary>
+        <p>This section is already open.</p>
+        </details> 
+    </div>
+
+    <div class="main-wrapper">
+        <div id="main">
+            <p>We remember with profound sorrow Sharif Osman Bin Hadi, a young Bangladeshi leader whose life was a testament to courage and conviction, and whose tragic death has left a nation in mourning. As a prominent student activist and dedicated member of the Bangladesh Chhatra League, he was a vocal and passionate advocate for his community and peers, known for his organizing prowess and commitment to social justice. His leadership was not one of title, but of action, earning him deep respect among the youth of Noakhali and beyond. The circumstances of his untimely death, reportedly at the hands of criminal actors in 2022, sent shockwaves through the country, highlighting the perils faced by those who stand firm for their principles. Sharif Osman’s legacy, however, transcends this violence. He is memorialized not as a victim, but as a brave heart whose aspirational spirit and call for a better future continue to inspire a generation to pursue change with unwavering resolve. His dream for a more just society remains a guiding light.</p>
+
+            <!-- New divs from clicking F will be appended here -->
+        </div>
+
+        <div class="next">
+            <h1>SHARIF OSMAN BIN HADI</h1>
+        </div>
+        <div class="next">
+            <h1>SHARIF OSMAN BIN HADI</h1>
+        </div><div class="next">
+            <h1>SHARIF OSMAN BIN HADI</h1>
+        </div><div class="next">
+            <h1>SHARIF OSMAN BIN HADI</h1>
+        </div><div class="next">
+            <h1>SHARIF OSMAN BIN HADI</h1>
+        </div>
+
+    </div>
+
+    <div id="checkout-panel" class="checkout-panel hide">
+        <h3>Checkout / Cart</h3>
+        <p>Your items will appear here...</p>
+        <ul>
+            <li>Item 1 - $10</li>
+            <li>Item 2 - $25</li>
+        </ul>
+        <button style="margin-top: 20px; padding: 12px 24px; font-size:1.1rem;">Proceed to Payment</button>
+    </div>
+<!-- POST -->
+    <div id="post-modal" class="post-modal hide">
+  <div class="post-box">
+    <div class="post-header">
+      <img src="https://via.placeholder.com/50" alt="user">
+      <textarea id="postText" placeholder="What's on your mind?"></textarea>
+    </div>
+ 
+    <div class="post-actions">
+      <button id="submitPost">Post</button>
+      <button id="cancelPost">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+    // ─── Hide/Show paragraph ───
+    const content = document.getElementById("content");
+    const change = document.getElementById("change");
+
+    change.addEventListener('click', () => {
+        content.classList.toggle("hde");
+        change.textContent = content.classList.contains("hde") ? "SHOW" : "HIDE";
+    });
+
+    // ─── Counter ───
+    let count = 0;
+    document.getElementById("inValue").value = count;
+    document.getElementById("minus").onclick = () => document.getElementById("inValue").value = --count;
+    document.getElementById("plus").onclick  = () => document.getElementById("inValue").value = ++count;
+
+    // ─── Add new divs INSIDE #main (not body) ───
+    const main = document.getElementById("main");
+
+    // ─── Checkout panel toggle ───
+    const checkoutBtn = document.getElementById("e");
+    const checkoutPanel = document.getElementById("checkout-panel");
+
+    function toggleCheckout() {
+        const willBeOpen = checkoutPanel.classList.contains("hide");
+        checkoutPanel.classList.toggle("hide");
+        checkoutBtn.classList.toggle("active", willBeOpen);
+    }
+
+    checkoutBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleCheckout();
+    });
+
+    document.addEventListener("click", (e) => {
+        if (checkoutPanel.contains(e.target) || checkoutBtn.contains(e.target)) return;
+        if (!checkoutPanel.classList.contains("hide")) {
+            checkoutPanel.classList.add("hide");
+            checkoutBtn.classList.remove("active");
+        }
+    });
+
+    // ─── POST MODAL LOGIC ───
+const postBtn = document.getElementById("postBtn");
+const postModal = document.getElementById("post-modal");
+const postText = document.getElementById("postText");
+const submitPost = document.getElementById("submitPost");
+const cancelPost = document.getElementById("cancelPost");
+
+function divId(text){
+    return{
+        id: Date.now(),
+        text: text
+    };
+};
+// open modal
+postBtn.addEventListener("click", () => {
+  postModal.classList.remove("hide");
+  postText.focus();
+});
+
+// cancel modal
+cancelPost.addEventListener("click", () => {
+  postModal.classList.add("hide");
+  postText.value = "";
+});
+
+// submit post
+submitPost.addEventListener("click", () => {
+  const text = postText.value.trim();
+  if (!text) return;
+
+  const postDiv = document.createElement("div");
+  postDiv.divId(text);
+  const delBtn = document.createElement("button");
+  delBtn.innerHTML="Delete";
+  postDiv.className = "user-post";
+
+  postDiv.innerHTML = `
+  <img 
+    src="hadi.jpg" 
+    alt="hadi" 
+    style="width:90px;height:90px;border-radius:50%;cursor:pointer;transition:transform 1.5s cubic-bezier(0.4,0,0.2,1);will-change:transform;"
+    onmouseover="this.style.transform='scale(1.5)'"
+    onmouseout="this.style.transform='scale(1)'"
+  >
+  <p>${text}</p>
+`;
+delBtn.addEventListener("click", (e) => {
+    // e.target is the button → e.target.parentElement is the postDiv
+    const postToDelete = e.target.parentElement;
+    
+    if (postToDelete && postToDelete.classList.contains("user-post")) {
+        postToDelete.remove();   // modern & clean way to delete from DOM
+        // or: postToDelete.parentNode.removeChild(postToDelete); // older browsers
+    }
+});
+  postDiv.appendChild(delBtn);
+  main.prepend(postDiv);
+
+  postText.value = "";
+  postModal.classList.add("hide");
+});
+
+// close modal on outside click
+postModal.addEventListener("click", (e) => {
+  if (e.target === postModal) {
+    postModal.classList.add("hide");
+  }
+});
+
+</script>
+</body>
+</html>
