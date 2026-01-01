@@ -393,12 +393,6 @@ const postText = document.getElementById("postText");
 const submitPost = document.getElementById("submitPost");
 const cancelPost = document.getElementById("cancelPost");
 
-function divId(text){
-    return{
-        id: Date.now(),
-        text: text
-    };
-};
 // open modal
 postBtn.addEventListener("click", () => {
   postModal.classList.remove("hide");
@@ -417,7 +411,7 @@ submitPost.addEventListener("click", () => {
   if (!text) return;
 
   const postDiv = document.createElement("div");
-  postDiv.divId(text);
+ 
   const delBtn = document.createElement("button");
   delBtn.innerHTML="Delete";
   postDiv.className = "user-post";
@@ -457,4 +451,5 @@ postModal.addEventListener("click", (e) => {
 
 </script>
 </body>
+
 </html>
