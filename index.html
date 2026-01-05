@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- IMPORTANT: This makes site responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="hadi.png">
+    <title>PaniYaan</title>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-brand">
+            <h1>HADI</h1>
+            <img src="hadi.jpg" alt="hadi" class="nav-logo">
+        </div>
+        
+        <!-- Mobile menu button -->
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#">A</a></li>
+            <li><a href="#">B</a></li>
+            <li><a href="#">C</a></li>
+            <li><a href="#">D</a></li>
+            <li id="e" class="cart-btn"><a href="#">CART</a></li>
+            <li id="postBtn" class="post-btn"><a href="#">POST</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <p id="content">২০২৩ সালের নভেম্বরের কোনো এক শীতের সন্ধ্যা। সেগুনবাগিচায়, বাংলাদেশের একজন বিদগ্ধ স্কলারের বাসায় হাদি ভাইয়ের সঙ্গে আমার পরিচয়।</p>
+                
+                <div class="button-group">
+                    <button id="change" class="btn">HIDE</button>
+                    <button id="minus" class="btn">-</button>
+                    <input type="number" id="inValue" readonly class="counter-input">
+                    <button id="plus" class="btn">+</button>
+                </div>
+                
+                <div class="accordion">
+                    <details>
+                        <summary>Section 1</summary>
+                        <p>This is the content.</p>
+                    </details>
+                    <details open>
+                        <summary>Expanded by default</summary>
+                        <p>This section is already open.</p>
+                    </details>
+                </div>
+                
+                <!-- Joke Generator -->
+                <div class="joke-section">
+                    <h2>😂 Joke Generator</h2>
+                    <div class="joke-buttons">
+                        <button onclick="getJoke()" class="btn joke-btn">Generate New Joke</button>
+                        <button id="copyBtn" onclick="copyJoke()" class="btn joke-btn">Copy Joke</button>
+                    </div>
+                    <p id="joke" class="joke-text"></p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-wrapper">
+            <div class="main-content" id="main">
+                <p>We remember with profound sorrow Sharif Osman Bin Hadi, a young Bangladeshi leader whose life was a testament to courage and conviction, and whose tragic death has left a nation in mourning.</p>
+                <!-- New divs from clicking F will be appended here -->
+            </div>
+            
+            <div class="next-section">
+                <h1>SHARIF OSMAN BIN HADI</h1>
+            </div>
+        </main>
+    </div>
+
+    <!-- Checkout Panel -->
+    <div id="checkout-panel" class="checkout-panel hide">
+        <div class="checkout-content">
+            <h3>Checkout / Cart</h3>
+            <p>Your items will appear here...</p>
+            <ul>
+                <li>Item 1 - $10</li>
+                <li>Item 2 - $25</li>
+            </ul>
+            <button class="btn checkout-btn">Proceed to Payment</button>
+        </div>
+    </div>
+
+    <!-- Post Modal -->
+    <div id="post-modal" class="post-modal hide">
+        <div class="post-box">
+            <div class="post-header">
+                <img src="https://via.placeholder.com/50" alt="user" class="user-avatar">
+                <textarea id="postText" placeholder="What's on your mind?" class="post-textarea"></textarea>
+            </div>
+            <div class="post-actions">
+                <button id="submitPost" class="btn post-submit">Post</button>
+                <button id="cancelPost" class="btn post-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
